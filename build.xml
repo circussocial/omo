@@ -38,7 +38,7 @@
   <!-- ============================================  -->
     <target name="build" description="Build"  >
       
-         <version releasetype="bugfix" file="version.txt" property="version.number"/>
+         <version releasetype="bugfix" file="version.ini" property="version.number"/>
          
           <tstamp>
             <format property="DATE" pattern="%c" />
