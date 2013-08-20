@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="omo" default="build">
+
+ 
+  
+  <!-- add custom tasks from current directory  -->
+    <taskdef name="gitdescribe"   classname="GitDescribeTask" />
+    <taskdef name="gitdiff"       classname="GitDiffTask" />
+    <taskdef name="gitlog"        classname="GitLogTask" />
+    <taskdef name="gitremoteshow" classname="GitRemoteShowTask" />
+    <taskdef name="gittag"        classname="GitTagTask" />
+    <taskdef name="gitcommit"        classname="GitCommitTask" />
+    <taskdef name="gitpush"        classname="GitPushTask" />
+    
+
+    <!-- assume our current directory IS the git repo to operate on -->
+    <property name="author.name" value="Amol C" />
+    <property name="repo.dir" value="." />
+    <property name="remote.repo" value="git@github.com:circussocial/omo.git" />
+    
+    
+    <resolvepath propertyName="repo.dir.resolved" file="${repo.dir}" />
+    
+  <!-- ============================================  -->
+  <!-- (GIT Classes )   Target: Init                 -->
+  <!-- This target is used to setup your local workspace -->
+  <!-- ============================================  -->
+    
+  <!-- ============================================  -->
+  <!-- (GIT Classes )   Target: Dev                 -->
+  <!-- This target is used to develop your local application and sync remote  workspace -->
+  <!-- ============================================  -->  
+    
+    
+  <!-- ============================================  -->
+  <!-- (GIT Classes )   Target: build                -->
+  <!-- ============================================  -->
+    <target name="build" description="Build"  >
+      
+         <version releasetype="bugfix" file="version.txt" property="version.number"/>
+         
+          <tstamp>
+            <format property="DATE" pattern="%c" />
+          </tstamp>
+        
+        <gitpull
+         repository="${repo.dir}" refspec="master" />
+
+        
+        <exec returnProperty="add" command="git add -A" dir="${repo.dir}" logoutput="true" />  
+        
+        <echo msg="${add}" />
+        
+        <gitcommit
+             repository="${repo.dir.resolved}" 
+             message="${version.number} ${DATE} commited by Author ${author.name} " allFiles="true" />
+        
+        <gittag 
+              repository="${repo.dir.resolved}" 
+                 name="${version.number}"
+                 annotate="true" message="Version ${version.number} ${DATE} by ${author.name}"/>
+   
+        <gitpush
+        repository="${repo.dir}" 
+        destination="origin" refspec="master"
+        quiet="false" tags="true" />
+      
+        <echo msg="${version.number} Successful" />
+       <echo msg="${version.number} Successful By Amol" />
+    </target>
+    
+    
+    
+        <target name="commit" description="commit"  >
+      
+         <version releasetype="Bugfix" file="version.ini" property="version.number"/>
+         
+          <tstamp>
+            <format property="DATE" pattern="%c" />
+          </tstamp>
+         
+        <gitcommit
+             repository="${repo.dir.resolved}" 
+             message="${version.number} ${DATE} commited by Author ${author.name} " allFiles="true" />
+        
+        
+        <echo msg="${version.number} Successful" />
+        <echo msg="${version.number} Successful By Amol" />
+       <echo msg="${version.number} Successful By Amol C" />
+        </target>
+
+  <!-- ============================================  -->
+  <!-- (GIT Classes )   Target: Deploy                -->
+  <!-- ============================================  -->
+
+    
+  
+</project>
